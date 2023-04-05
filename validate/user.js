@@ -16,10 +16,18 @@ exports.reg_login_validate = {
   }
 }
 
-exports.reg_updateInfo_validate = {
+exports.user_updateinfo_validate = {
   body: {
     id,
     nickname,
     email
+  }
+}
+
+// 修改密码
+exports.update_updatepwd_validate = {
+  body: {
+    oldPwd: password,
+    newPwd: Joi.not(Joi.ref('oldPwd')).concat(password)
   }
 }
