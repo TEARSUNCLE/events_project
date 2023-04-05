@@ -31,7 +31,9 @@ app.use(expressJWT({ secret: config.tokenKey }).unless({ path: [/^\/api\//] }))
 
 // 全局路由
 const userRouter = require('./router/user')
+const userInfoRouter = require('./router/userInfo')
 app.use('/api', userRouter)
+app.use('/my', userInfoRouter)
 
 // 全局错误处理中间件
 app.use((err, req, res, next) => {
