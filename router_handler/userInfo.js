@@ -56,3 +56,17 @@ exports.updatepwd = (req, res) => {
     })
   })
 }
+
+// 修改头像
+exports.updateAvatar = (req, res) => {
+  const updateSql = 'update ev_users set user_pic = ? where id = ?'
+  db.query(updateSql, [req.body.avatar, req.user.id], (err, results) => {
+    if (err) return res.errHandler(err)
+    if (results.affectedRows !== 1) return res.errHandler('头像更新失败！')
+
+    res.send({
+      code: 0,
+      msg: '头像更新成功！'
+    })
+  })
+}

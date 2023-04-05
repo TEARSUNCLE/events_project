@@ -9,6 +9,9 @@ const id = Joi.number().integer().min(1).required()
 const nickname = Joi.string().required()
 const email = Joi.string().email().required()
 
+// 修改头像
+const avatar = Joi.string().dataUri().required()
+
 exports.reg_login_validate = {
   body: {
     username,
@@ -25,9 +28,19 @@ exports.user_updateinfo_validate = {
 }
 
 // 修改密码
-exports.update_updatepwd_validate = {
+exports.update_password_validate = {
   body: {
     oldPwd: password,
+    // 1. joi.ref('oldPwd') 表示 newPwd 的值必须和 oldPwd 的值保持一致
+    // 2. joi.not(joi.ref('oldPwd')) 表示 newPwd 的值不能等于 oldPwd 的值
+    // 3. .concat() 用于合并 joi.not(joi.ref('oldPwd')) 和 password 这两条验证规则
     newPwd: Joi.not(Joi.ref('oldPwd')).concat(password)
+  }
+}
+
+// 修改头像
+exports.update_avatar_validate = {
+  body: {
+    avatar
   }
 }
