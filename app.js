@@ -1,5 +1,10 @@
 const express = require('express')
 const app = express()
+// 表单验证 依赖包
+const Joi = require('joi')
+const config = require('./config')
+// 解析 token 依赖包
+const expressJWT = require('express-jwt')
 
 // cors跨域
 const cors = require('cors')
@@ -21,16 +26,21 @@ app.use((req, res, next) => {
   next()
 })
 
+// 解析 token 中间件
+app.use(expressJWT({ secret: config.tokenKey }).unless({ path: [/^\/api\//] }))
+
 // 全局路由
 const userRouter = require('./router/user')
-const Joi = require('joi')
 app.use('/api', userRouter)
 
 // 全局错误处理中间件
 app.use((err, req, res, next) => {
+  // 校验未通过
   if (err instanceof Joi.ValidationError) return res.errHandler(err)
+  // 身份验证未通过
+  if (err.name === 'UnauthorizedError') return res.errHandler('身份验证失败！')
+  // 未知错误
   res.errHandler(err)
-  // next()
 })
 
 app.listen(3006, () => {
