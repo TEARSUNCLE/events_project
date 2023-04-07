@@ -20,3 +20,20 @@ exports.del_cates_validate = {
     id
   }
 }
+
+exports.list_cates_validate = {
+  body: {
+    id: Joi.number().integer().min(1),
+    name: Joi.string(),
+    alias: Joi.string().alphanum()
+  }
+}
+
+// 更新文章
+exports.edit_cates_validate = {
+  body: {
+    id,
+    name,
+    alias
+  }
+}
