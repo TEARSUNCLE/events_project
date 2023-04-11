@@ -13,6 +13,9 @@ app.use(cors())
 // 解析表单中间件
 app.use(express.urlencoded({ extended: false }))
 
+// 静态资源托管
+app.use('/uploads', express.static('./uploads'))
+
 // 响应数据 => err错误处理
 app.use((req, res, next) => {
   // code === 1 默认为错误处理
@@ -33,9 +36,11 @@ app.use(expressJWT({ secret: config.tokenKey }).unless({ path: [/^\/api\//] }))
 const userRouter = require('./router/user')
 const userInfoRouter = require('./router/userInfo')
 const artcateRouter = require('./router/artcate')
+const articleRouter = require('./router/articles')
 app.use('/api', userRouter)
 app.use('/my', userInfoRouter)
 app.use('/my/article', artcateRouter)
+app.use('/my/article', articleRouter)
 
 // 全局错误处理中间件
 app.use((err, req, res, next) => {

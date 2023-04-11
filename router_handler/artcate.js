@@ -7,6 +7,7 @@ exports.getArticleCates = (req, res) => {
   const totalData = 'select * from ev_article_cate where is_delete = 0 order by id asc'
 
   db.query(Object.keys(req.body).length === 0 ? totalData : sql, (err, results) => {
+    console.log(10, sql)
     if (err) return res.errHandler(err)
 
     res.send({
