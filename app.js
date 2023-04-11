@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 
 // 静态资源托管
-app.use('/uploads', express.static('./uploads'))
+app.use('/static', express.static('./uploads'))
 
 // 响应数据 => err错误处理
 app.use((req, res, next) => {

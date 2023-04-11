@@ -46,3 +46,64 @@ module.exports.articleList = (req, res) => {
     })
   })
 }
+
+// 删除文章
+module.exports.delArticle = (req, res) => {
+  const sql = 'update ev_articles set is_delete = 1 where id = ?'
+  
+  db.query(sql, req.body.id, (err, results) => {
+    if (err) return res.errHandler(err)
+    if (results.affectedRows !== 1) return res.errHandler('删除文章失败！')
+
+    res.send({
+      code: 0,
+      msg: '删除文章成功！'
+    })
+  })
+}
+
+// 修改文章
+module.exports.updateArticle = (req, res) => {
+  if (!req.file || req.file.fieldname !== 'cover_img') return res.errHandler('文章封面为必选参数！')
+
+  const articleInfo = {
+    ...req.body,
+    cover_img: path.join('/uploads', req.file.filename + '.' + req.file.mimetype.split("/")[1]),
+    pub_date: parseInt(new Date() / 1000),
+    author_id: req.user.id
+  }
+
+  const selectSql = 'select * from ev_articles where id = ? and (title = ? or content = ?)'
+  // 查询数据是否已经存在于数据库中 id要一样
+  db.query(selectSql, [req.body.id, req.body.title, req.body.content], (err, results) => {
+    if (err) return res.errHandler(err)
+    if (results.length !== 0) return res.errHandler('标题或内容被占用，请更换后重试！')
+
+    const updateSql = 'update ev_articles set ? where id = ?'
+    db.query(updateSql, [articleInfo, req.body.id], (err, results) => {
+      if (err) return res.errHandler(err)
+      if (results.affectedRows !== 1) return res.errHandler('更新文章分类失败！')
+
+      res.send({
+        code: 0,
+        msg: '更新文章成功！'
+      })
+    })
+  })
+}
+
+// 文章详情
+module.exports.articleDetail = (req, res) => {
+  const sql = 'select * from ev_articles where id = ?'
+
+  db.query(sql, req.body.id, (err, results) => {
+    if (err) return res.errHandler(err)
+    if (results.length !== 1) return res.errHandler('获取文章详情失败！')
+
+    res.send({
+      code: 0,
+      msg: '获取文章详情成功！',
+      data: results[0]
+    })
+  })
+}
