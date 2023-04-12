@@ -11,15 +11,21 @@ module.exports.addArticle = (req, res) => {
     pub_date: parseInt(new Date() / 1000),
     author_id: req.user.id
   }
-
-  const insertSql = 'insert into ev_articles set ?'
-  db.query(insertSql, articleInfo, (err, results) => {
+  // 查询输入的字段是否存在于数据库中，不允许重复
+  const selectSql = 'select * from ev_articles where title = ? or content = ?'
+  db.query(selectSql, [articleInfo.title, articleInfo.content], (err, results) => {
     if (err) return res.errHandler(err)
-    if (results.affectedRows !== 1) return res.errHandler('发布文章失败！')
+    if (results.length !== 0) return res.errHandler('标题或内容被占用，请更换后重试！')
 
-    res.send({
-      code: 0,
-      msg: '发布文章成功！'
+    const insertSql = 'insert into ev_articles set ?'
+    db.query(insertSql, articleInfo, (err, results) => {
+      if (err) return res.errHandler(err)
+      if (results.affectedRows !== 1) return res.errHandler('发布文章失败！')
+
+      res.send({
+        code: 0,
+        msg: '发布文章成功！'
+      })
     })
   })
 }
@@ -50,7 +56,7 @@ module.exports.articleList = (req, res) => {
 // 删除文章
 module.exports.delArticle = (req, res) => {
   const sql = 'update ev_articles set is_delete = 1 where id = ?'
-  
+
   db.query(sql, req.body.id, (err, results) => {
     if (err) return res.errHandler(err)
     if (results.affectedRows !== 1) return res.errHandler('删除文章失败！')
@@ -73,20 +79,26 @@ module.exports.updateArticle = (req, res) => {
     author_id: req.user.id
   }
 
-  const selectSql = 'select * from ev_articles where id = ? and (title = ? or content = ?)'
-  // 查询数据是否已经存在于数据库中 id要一样
-  db.query(selectSql, [req.body.id, req.body.title, req.body.content], (err, results) => {
+  const sql = 'select * from ev_articles where id = ?'
+  db.query(sql, req.body.id, (err, results) => {
     if (err) return res.errHandler(err)
-    if (results.length !== 0) return res.errHandler('标题或内容被占用，请更换后重试！')
+    if (results.length <= 0) return res.errHandler('id异常')
 
-    const updateSql = 'update ev_articles set ? where id = ?'
-    db.query(updateSql, [articleInfo, req.body.id], (err, results) => {
+    const selectSql = 'select * from ev_articles where title = ? or content = ?'
+    // 查询输入的字段是否存在于数据库中，不允许重复
+    db.query(selectSql, [req.body.title, req.body.content], (err, results) => {
       if (err) return res.errHandler(err)
-      if (results.affectedRows !== 1) return res.errHandler('更新文章分类失败！')
+      if (results.length !== 0) return res.errHandler('标题或内容被占用，请更换后重试！')
 
-      res.send({
-        code: 0,
-        msg: '更新文章成功！'
+      const updateSql = 'update ev_articles set ? where id = ?'
+      db.query(updateSql, [articleInfo, req.body.id], (err, results) => {
+        if (err) return res.errHandler(err)
+        if (results.affectedRows !== 1) return res.errHandler('更新文章分类失败！')
+
+        res.send({
+          code: 0,
+          msg: '更新文章成功！'
+        })
       })
     })
   })
