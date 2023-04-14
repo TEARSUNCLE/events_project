@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const app = express()
 // 表单验证 依赖包
 const Joi = require('joi')
@@ -14,7 +15,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 
 // 静态资源托管
-app.use('/static', express.static('./uploads'))
+app.use('/static', express.static('./public/imgs'))
 
 // 响应数据 => err错误处理
 app.use((req, res, next) => {

@@ -7,10 +7,11 @@ module.exports.addArticle = (req, res) => {
   if (!req.file || req.file.fieldname !== 'cover_img') return res.errHandler('文章封面为必选参数！')
   const articleInfo = {
     ...req.body,
-    cover_img: path.join('/uploads', req.file.filename + '.' + req.file.mimetype.split("/")[1]),
+    cover_img: path.join('/static', req.file.filename),
     pub_date: parseInt(new Date() / 1000),
     author_id: req.user.id
   }
+
   // 查询输入的字段是否存在于数据库中，不允许重复
   const selectSql = 'select * from ev_articles where title = ? or content = ?'
   db.query(selectSql, [articleInfo.title, articleInfo.content], (err, results) => {
@@ -74,7 +75,7 @@ module.exports.updateArticle = (req, res) => {
 
   const articleInfo = {
     ...req.body,
-    cover_img: path.join('/uploads', req.file.filename + '.' + req.file.mimetype.split("/")[1]),
+    cover_img: path.join('/static', req.file.filename),
     pub_date: parseInt(new Date() / 1000),
     author_id: req.user.id
   }
