@@ -6,7 +6,6 @@ exports.articleCates = (row, sqlName) => {
 
   // 查询
   if (row) {
-    console.log(9, row)
     for (const key in row) {
       sql += `${key} = '${row[key]}' and `
     }
