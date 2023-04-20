@@ -1,5 +1,4 @@
 const express = require('express')
-const path = require('path')
 const app = express()
 // 表单验证 依赖包
 const Joi = require('joi')
@@ -54,5 +53,5 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(3006, () => {
-  console.log('项目已运行, http://127.0.0.1:3006')
-})
+  console.log(process.env.NODE_ENV === 'production' ? '项目已运行, http://127.0.0.1:3006' : '项目已运行, http://114.132.224.49:3006')
+})  
