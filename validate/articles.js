@@ -26,6 +26,8 @@ exports.list_article_validate = {
   body: {
     page,
     pageSize,
+    start: Joi.number().integer(),
+    end: Joi.number().integer(),
     title: Joi.string(),
     content: Joi.string(),
     pub_date: Joi.string(),

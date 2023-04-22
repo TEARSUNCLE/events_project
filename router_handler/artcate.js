@@ -2,12 +2,11 @@ const db = require('../db/index')
 const { articleCates } = require('../utils/filterData')
 
 // 文章列表
-exports.getArticleCates = (req, res) => {
-  const sql = articleCates(req.body, 'ev_article_cate')
-  const totalData = 'select * from ev_article_cate where is_delete = 0 order by id asc'
+exports.getArticleCates = async (req, res) => {
+  let sql = null
+  await articleCates(req.body, 'ev_article_cate').then(res => sql = res)
 
-  db.query(Object.keys(req.body).length === 0 ? totalData : sql, (err, results) => {
-    console.log(10, sql)
+  db.query(sql, (err, results) => {
     if (err) return res.errHandler(err)
 
     res.send({
