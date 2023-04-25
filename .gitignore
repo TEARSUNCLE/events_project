@@ -1,5 +1,6 @@
 .DS_Store
 package-lock.json
+package.json
 yarn.lock
 /dist
  
@@ -28,3 +29,6 @@ dist/
 server/
 log/
 .env.development
+
+# pnpm
+pnpm-lock.yaml
