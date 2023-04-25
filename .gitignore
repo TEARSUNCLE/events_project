@@ -1,5 +1,6 @@
 .DS_Store
-node_modules
+package-lock.json
+yarn.lock
 /dist
  
 # local env files
@@ -20,3 +21,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# 忽略指定文件夹
+node_modules/
+dist/
+server/
+log/
+.env.development

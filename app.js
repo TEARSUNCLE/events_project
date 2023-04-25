@@ -5,6 +5,8 @@ const Joi = require('joi')
 const config = require('./config')
 // 解析 token 依赖包
 const expressJWT = require('express-jwt')
+// swagger
+const swaggerUi = require('swagger-ui-express')
 
 // cors跨域
 const cors = require('cors')
@@ -12,6 +14,7 @@ app.use(cors())
 
 // 解析表单中间件
 app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 // 静态资源托管
 app.use('/static', express.static('./public/imgs'))
@@ -32,6 +35,10 @@ app.use((req, res, next) => {
 // 解析 token 中间件
 app.use(expressJWT({ secret: config.tokenKey }).unless({ path: [/^\/api\//] }))
 
+// swagger
+const swaggerDoc = require('./swaggerJSON/common.json')
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
+
 // 全局路由
 const userRouter = require('./router/user')
 const userInfoRouter = require('./router/userInfo')
@@ -47,7 +54,7 @@ app.use((err, req, res, next) => {
   // 校验未通过
   if (err instanceof Joi.ValidationError) return res.errHandler(err)
   // 身份验证未通过
-  if (err.name === 'UnauthorizedError') return res.errHandler('身份验证失败！')
+  if (err.name === 'UnauthorizedError') return res.errHandler('身份验证失败！', 401)
   // 未知错误
   res.errHandler(err)
 })
