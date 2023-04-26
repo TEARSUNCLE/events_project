@@ -5,9 +5,7 @@ export default defineComponent({
 
   render() {
     return (
-      <>
-        <routerView />
-      </>
+      <div>首页</div>
     )
   }
 })

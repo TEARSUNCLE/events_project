@@ -1,0 +1,102 @@
+.loginBox {
+  height: 100vh;
+  background: linear-gradient(to right, #5e56cc, #ae52c4);
+
+  :global {
+    .loginForm {
+      width: 500px;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 700px;
+      padding: 55px;
+
+      .title {
+        font-size: 39px;
+      }
+
+      .ant-input {
+        height: 55px;
+        font-size: 16px;
+        color: #333;
+
+        &:focus {
+          .bottomLine {
+            background-color: red;
+          }
+        }
+      }
+
+      .bottomLine {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background-color: #d9d9d9;
+        position: relative;
+      }
+
+      .ant-input-affix-wrapper {
+        border: 0;
+      }
+
+      .ant-input-affix-wrapper:focus,
+      .ant-input-affix-wrapper-focused {
+        box-shadow: none;
+      }
+
+      .ant-input-prefix {
+        margin-right: 15px;
+      }
+
+      // 去除触发校验的边框和阴影
+      .ant-form-item-has-error :not(.ant-input-disabled):not(.ant-input-borderless).ant-input,
+      .ant-input:focus,
+      .ant-input-affix-wrapper-focused {
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .site-form-item-icon {
+        font-size: 20px;
+        color: #adadad;
+      }
+
+      .ant-btn {
+        height: 50px;
+        box-shadow: 0 5px 30px 0px rgba(3, 216, 222, 0.2);
+        background: linear-gradient(to right, #1bc4e2, #4f95e8, #905ef1, #fc00ff)
+      }
+
+      .ant-btn-primary {
+        border: none;
+      }
+
+      .icon {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        background-color: #333;
+        margin: 5px;
+        border-radius: 50%;
+        font-size: 25px;
+        color: #fff;
+
+        &:nth-of-type(1) {
+          background-color: #333;
+        }
+
+        &:nth-of-type(2) {
+          background-color: #1da1f2;
+        }
+
+        &:nth-of-type(3) {
+          background-color: #ea4335;
+        }
+
+        &:hover {
+          background-color: #333;
+        }
+      }
+    }
+  }
+}
