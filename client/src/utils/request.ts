@@ -1,5 +1,6 @@
 import { message } from 'ant-design-vue'
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
+import { getToken, hasToken } from './storage'
 
 const baseURL = "http://127.0.0.1:3006"
 const request = axios.create({
@@ -9,7 +10,9 @@ const request = axios.create({
 
 // 请求拦截
 request.interceptors.request.use((config: AxiosRequestConfig) => {
-
+  if(hasToken()) {
+    config.headers ? (config.headers.Authorization = `${getToken()}`) : config;
+  }
   return config
 }, (err) => {
   return Promise.reject(err)

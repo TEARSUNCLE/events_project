@@ -1,4 +1,5 @@
 import { RouteRecordRaw, createWebHistory, createRouter } from 'vue-router'
+import HomtLayout from '@/layout/HomtLayout'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,10 +19,28 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import('@/views/dashboard/index'),
+    component: HomtLayout,
     meta: {
       title: '首页'
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: {
+          title: '首页'
+        }
+      },
+      {
+        path: '/article',
+        name: 'article',
+        component: () => import('@/views/article/index'),
+        meta: {
+          title: '文章管理'
+        }
+      },
+    ]
   },
 ]
 
