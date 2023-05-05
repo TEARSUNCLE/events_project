@@ -13,6 +13,9 @@ export default defineComponent({
         title: '温馨提示',
         icon: <ExclamationCircleFilled />,
         content: '确定要退出吗?',
+        centered: true,
+        okText: "确认",
+        cancelText: "取消",
         onOk() {
           user.logout()
         },

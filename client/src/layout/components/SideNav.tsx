@@ -13,9 +13,14 @@ export default defineComponent({
         label: '首页',
       },
       {
-        key: 'article',
+        key: 'articleCates',
         icon: <FileTextOutlined />,
-        label: '文章管理',
+        label: '文章类别',
+      },
+      {
+        key: 'articleList',
+        icon: <FileTextOutlined />,
+        label: '文章列表',
       },
       {
         key: 'personal',
@@ -83,7 +88,7 @@ export default defineComponent({
                   >
                     {item.children.map(child => {
                       return (
-                        <Menu.Item key={child.key} onclick={() => handleClick(item)}>
+                        <Menu.Item key={child.key} onclick={() => handleClick(child)}>
                           {child.icon}
                           <span>{child.label}</span>
                         </Menu.Item>

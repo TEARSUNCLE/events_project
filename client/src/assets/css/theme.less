@@ -6,32 +6,49 @@
 
 //气泡提示
 .ant-popover {
-  z-index: 999!important;
+  z-index: 999 !important;
 }
 
-.setTable /deep/ .ant-table-thead > tr > th, .ant-table-tbody {
-  background: #ffffff;
+.ant-table-pagination-right {
+  justify-content: center;
 }
-.setTable /deep/ .ant-table {
-  border-radius: 8px;
-  padding: 0 25px 25px;
-  background: #ffffff;
+
+// 列表变色
+.table-striped {
+  background: #F5F6FF;
+
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right {
+    background: #F5F6FF;
+  }
 }
 
 // 修改toast的样式
 .van-toast {
   background: var(--van-toast-background-color) !important;
 }
+
 // 修改modal弹框按钮
 .ant-modal-footer {
   text-align: center;
 }
+
+.ant-modal {
+  top: 0;
+}
+
+.ant-modal-wrap {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 // 禁止下拉框/树形里的选项换行
 .ant-select-tree-node-content-wrapper {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 // 去除下拉框/树形选项前方的留白区域 24px
 .ant-select-tree-switcher {
   width: 0;

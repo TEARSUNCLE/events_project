@@ -382,3 +382,20 @@
     }
   }
 }
+
+.searchBtns {
+  background: none;
+  border: none;
+  color: @primary-color;
+  font-size: 14px;
+  box-shadow: none;
+  padding: 0;
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+  &:hover, &:focus {
+    color: @primary-color;
+    background: none;
+    border-color: none;
+  }
+}
