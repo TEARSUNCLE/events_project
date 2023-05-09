@@ -390,12 +390,33 @@
   font-size: 14px;
   box-shadow: none;
   padding: 0;
+
   &:not(:last-child) {
     margin-right: 20px;
   }
-  &:hover, &:focus {
+
+  &:hover,
+  &:focus {
     color: @primary-color;
     background: none;
     border-color: none;
   }
+}
+
+.pageBtn {
+  height: 35px;
+  border-radius: 4px;
+  padding-left: 13px;
+  padding-right: 13px;
+  min-width: 90px;
+}
+
+.searchBtn {
+  background-color: #4f5eda;
+  color: #fff;
+}
+
+.resetBtn {
+  background-color: #eee;
+  color: #333;
 }

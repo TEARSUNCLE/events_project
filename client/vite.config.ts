@@ -14,7 +14,7 @@ export default defineConfig({
     // 导入别名
     alias: {
       '@': resolve(__dirname, 'src'),
-      "/images": "src/assets/images",
+      "/images": "src/assets/images"
     }
   },
   server: {

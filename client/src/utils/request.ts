@@ -10,7 +10,7 @@ const request = axios.create({
 
 // 请求拦截
 request.interceptors.request.use((config: AxiosRequestConfig) => {
-  if(hasToken()) {
+  if (hasToken()) {
     config.headers ? (config.headers.Authorization = `${getToken()}`) : config;
   }
   return config

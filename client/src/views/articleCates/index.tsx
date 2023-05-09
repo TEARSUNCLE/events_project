@@ -58,9 +58,10 @@ export default defineComponent({
     }
 
     const handleDel = async (id: number) => {
-      const { data } = await delCatesApi(id)
+      const { data } = await delCatesApi({ id })
       if (data.code === 0) {
         message.success('已删除')
+        getListHand()
       }
     }
 

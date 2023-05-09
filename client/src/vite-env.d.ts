@@ -6,3 +6,5 @@
 //   const vueComponent: DefineComponent<{}, {}, any>
 //   export default vueComponent
 // }
+
+declare module '@wangeditor/editor-for-vue'

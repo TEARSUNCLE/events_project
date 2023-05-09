@@ -18,7 +18,7 @@ export default defineComponent({
         label: '文章类别',
       },
       {
-        key: 'articleList',
+        key: 'article',
         icon: <FileTextOutlined />,
         label: '文章列表',
       },
@@ -50,6 +50,10 @@ export default defineComponent({
     const route = useRoute()
 
     const selectedKeys = ref([route.path.replace("/", "")])
+
+    if (route.path === '/') {
+      selectedKeys.value.push('dashboard')
+    }
 
     const handleClick = (row: { key: string }) => {
       if (row) {

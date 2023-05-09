@@ -338,21 +338,21 @@ export default defineComponent({
             <div class='flexBox mb10'>
               <MyCharts
                 width={56 + 'vw'}
-                height={18 + 'vw'}
+                height={38 + 'vh'}
                 id='leftChart'
                 options={chartOptions.leftChart}
                 style={{ 'marginRight': '1vw' }}
               />
               <MyCharts
-                width={29 + 'vw'}
-                height={18 + 'vw'}
+                width={30 + 'vw'}
+                height={38 + 'vh'}
                 id='rightChart'
                 options={chartOptions.rightChart}
               />
             </div>
             <MyCharts
               width={87 + 'vw'}
-              height={20 + 'vw'}
+              height={40 + 'vh'}
               id='chart'
               options={chartOptions.main}
             />

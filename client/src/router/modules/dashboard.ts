@@ -1,14 +1,18 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from "vue-router"
 
-const dashboard: Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [
   {
-    path: '/dashboard',
+    path: '/',
     name: 'dashboard',
     component: () => import('@/views/dashboard/index'),
     meta: {
       title: '首页'
     }
+  },
+  {
+    path: '/dashboard',
+    redirect: '/'
   }
 ]
 
-export default dashboard
+export default routes

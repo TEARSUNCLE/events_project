@@ -8,6 +8,14 @@ const article: Array<RouteRecordRaw> = [
     meta: {
       title: '文章类别'
     }
+  },
+  {
+    path: '/article',
+    name: 'article',
+    component: () => import('@/views/article/index'),
+    meta: {
+      title: '文章管理'
+    }
   }
 ]
 
