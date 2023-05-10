@@ -30,7 +30,7 @@ exports.articleCates = (row, sqlName) => {
         resolve(sql)
       })
     } else {
-      resolve(sql = `select id, name, alias from ${sqlName} where is_delete = 0 order by id asc`)
+      resolve(sql = `select id, name, alias from ${sqlName} where is_delete = 0 order by id desc`)
       reject(new Error('Row parameter is missing'))
     }
   })
@@ -39,24 +39,30 @@ exports.articleCates = (row, sqlName) => {
 
 // 文章管理 列表筛选
 exports.articleList = (row, sqlName) => {
-  let sql = `select id, title, pub_date, status, cate_id from ${sqlName} where `
+  let sql = `select * from ${sqlName} where `
 
   const { page, pageSize, start, end, ...obj } = row
 
   // 未传递start和end
   if (row && !row.start && !row.end) {
-    console.log(51, '未传递start和end')
     for (const key in obj) {
-      sql += `${key} = '${obj[key]}' and `
+      if (obj[key] == '-1') {
+        sql + ``
+      } else {
+        sql += `${key} = '${obj[key]}' and `
+      }
     }
     // 传递了start或者end的其中一个
   } else if (row && (!row.start || !row.end)) {
-    console.log(57, '传递了start或者end的其中一个')
   } else {
     for (const key in obj) {
-      sql += `${key} = '${obj[key]}' and `
+      if (obj[key] == '-1') {
+        sql + ``
+      } else {
+        sql += `${key} = '${obj[key]}' and `
+      }
     }
     sql += `pub_date between '${row.start}' and '${row.end}' and `
   }
-  return sql + `is_delete = 0 order by id asc limit ${(row.page - 1) * row.pageSize},${row.pageSize}`
+  return sql + `is_delete = 0 order by id desc limit ${(row.page - 1) * row.pageSize},${row.pageSize}`
 }
