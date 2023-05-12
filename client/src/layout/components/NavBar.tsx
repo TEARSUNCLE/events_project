@@ -1,12 +1,36 @@
-import { defineComponent } from "vue"
+import { defineComponent, reactive } from "vue"
 import styles from '../css/NavBar.module.less'
 import useStore from "@/store"
-import { Modal, Image } from "ant-design-vue"
-import { ExclamationCircleFilled } from "@ant-design/icons-vue"
+import { Modal, Image, Dropdown, Space, Menu } from "ant-design-vue"
+import { DownOutlined, ExclamationCircleFilled } from "@ant-design/icons-vue"
+import DataInfo from "@/views/personal/dataInfo"
+import ChangeAvatar from "@/views/personal/changeAvatar"
+import ChangePwd from "@/views/personal/changePwd"
 export default defineComponent({
 
   setup() {
     const { user } = useStore()
+
+    const modalShow = reactive({
+      dataInfo: false,
+      changeAvatar: false,
+      resetPwd: false,
+      time: new Date().getTime().toString()
+    })
+
+    const menu = (
+      <Menu>
+        <Menu.Item key="dataInfo" onClick={() => handleModal('dataInfo')}>基本资料</Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="changeAvatar" onClick={() => handleModal('changeAvatar')}>更换头像</Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="resetPwd" onClick={() => handleModal('resetPwd')}>修改密码</Menu.Item>
+      </Menu>
+    );
+
+    const handleModal = (key: string) => {
+      modalShow[key] = true
+    }
 
     const showConfirm = () => {
       Modal.confirm({
@@ -27,14 +51,25 @@ export default defineComponent({
       showConfirm()
     }
 
+    const setModalFn = (module: string, type: string) => {
+      if (type === 'success') {
+        user.getUserInfo()
+      }
+      modalShow[module] = false
+    }
+
     return {
       user,
       logout,
+      menu,
+      handleModal,
+      modalShow,
+      setModalFn,
     }
   },
 
   render() {
-    const { user, logout } = this
+    const { user, logout, menu, handleModal, modalShow, setModalFn } = this
     return (
       <>
         <div class={`${styles.navBar} flexBox flexbetweenX aiCenter pl20 pr20`}>
@@ -55,10 +90,26 @@ export default defineComponent({
               /> :
               <img src="images/logo.jpg" alt="" width={30} height={30} class='mr10 avatar' />
             }
-            <p class='pr10'>{user.userInfo.nickname || user.userInfo.username}</p>
+            <p class='pr10'>
+              <Dropdown overlay={menu} placement={'bottom'} overlayStyle={{ 'marginTop': '12px' }} onClick={() => handleModal()}>
+                <a onClick={e => e.preventDefault()}>
+                  <Space>
+                    {user.userInfo.nickname || user.userInfo.username}
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            </p>
             <img src="images/layout.png" alt="" width={20} height={20} class='hand' onClick={() => logout()} />
           </div>
         </div>
+
+        {/* 修改信息 */}
+        {modalShow.dataInfo && <DataInfo isModalVisible={modalShow.dataInfo} onSetModalFn={setModalFn} />}
+        {/* 更换头像 */}
+        {modalShow.changeAvatar && <ChangeAvatar isModalVisible={modalShow.changeAvatar} onSetModalFn={setModalFn} />}
+        {/* 修改密码 */}
+        {modalShow.resetPwd && <ChangePwd isModalVisible={modalShow.resetPwd} onSetModalFn={setModalFn} />}
       </>
     )
   }

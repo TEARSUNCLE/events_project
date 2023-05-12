@@ -1,8 +1,8 @@
 import { createArticleApi, updateArticleApi } from "@/api/article"
-import UeEditor from "@/components/wangEditor"
+import UeEditor from "@/components/UeEditor"
 import { PlusOutlined } from "@ant-design/icons-vue"
 import { Form, Input, Modal, Select, Upload, message } from "ant-design-vue"
-import { defineComponent, reactive, ref } from "vue"
+import { defineComponent, getCurrentInstance, reactive, ref, watch } from "vue"
 
 export default defineComponent({
   props: {
@@ -20,19 +20,25 @@ export default defineComponent({
   },
   emits: ['setModalFn'],
   setup(props, { emit }) {
+    const { proxy } = getCurrentInstance() as any
+
     const ruleForm = ref<any>(null)
     const editorRef = ref<any>(null)
     const fileList = ref<any[]>([])
-    const avatarImg = ref<String>('\\static\\96a3be3cf272e017046d1b2674a52bd3.png')
+    const avatarImg = ref<String>('')
 
     const defaultForm = reactive({
       title: '' || props.curItem.title,
       cate_id: null || props.curItem.cate_id,
       content: '' || props.curItem.content,
-      status: '1' || props.curItem.status,
-      cover_img: null || props.curItem.cover_img,
+      status: props.curItem.status || '1',
+      cover_img: null,
       id: '' || props.curItem.id
     })
+
+    watch(() => props.curItem, (newVal) => {
+      if (newVal.cover_img) avatarImg.value = proxy.config.IMG_URL + newVal.cover_img.replaceAll("\\", '/')
+    }, { immediate: true, deep: true })
 
     // 上传前校验
     const beforeUploadCover = (file: any) => {
@@ -75,11 +81,11 @@ export default defineComponent({
       if (!params.cover_img) return message.error('请上传文章封面!')
 
       const formData = new FormData()
-      formData.append('title', params.title)
-      formData.append('cate_id', params.cate_id)
-      formData.append('content', params.content)
-      formData.append('status', params.status)
-      formData.append('cover_img', params.cover_img)
+      for (const key in params) {
+        if (Object.prototype.hasOwnProperty.call(params, key)) {
+          formData.append(key, params[key])
+        }
+      }
 
       if (props.curItem.id) {
         const { data } = await updateArticleApi(formData)
@@ -127,87 +133,90 @@ export default defineComponent({
             onCancel={handleCancel}
             width={800}
           >
-            <Form
-              name="basic"
-              labelCol={{ span: 3 }}
-              wrapperCol={{ span: 20 }}
-              style={{ maxWidth: 600 }}
-              initialValues={{ remember: true }}
-              autoComplete="off"
-              model={defaultForm}
-              ref='ruleForm'
-            >
-              <Form.Item
-                label="文章标题"
-                name="title"
-                rules={[{ required: true, message: '请输入文章标题!', trigger: ['blur'] }]}
+            <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+              <Form
+                name="basic"
+                labelCol={{ span: 3 }}
+                wrapperCol={{ span: 20 }}
+                style={{ maxWidth: 600 }}
+                initialValues={{ remember: true }}
+                autoComplete="off"
+                model={defaultForm}
+                ref='ruleForm'
               >
-                <Input v-model={[defaultForm.title, 'value']} placeholder="请输入文章标题" />
-              </Form.Item>
-              <Form.Item
-                label="文章类别"
-                name="cate_id"
-                rules={[{ required: true, message: '请选择文章类别!', trigger: ['blur'] }]}
-              >
-                <Select
-                  placeholder="请选择分类类别"
-                  style={{ width: '100%' }}
-                  v-model={[defaultForm.cate_id, 'value']}
-                  options={props.curItem.cateTypes && props.curItem.cateTypes.map(item => {
-                    return {
-                      value: item.id,
-                      label: item.name
-                    }
-                  })}
-                />
-              </Form.Item>
-              <Form.Item
-                label="文章状态"
-                name="status"
-                rules={[{ required: true, message: '请选择文章状态!', trigger: ['blur'] }]}
-              >
-                <Select
-                  placeholder="请选择文章状态"
-                  style={{ width: '100%' }}
-                  v-model={[defaultForm.status, 'value']}
-                  options={[
-                    { value: '1', label: '已发布' },
-                    { value: '2', label: '草稿' },
-                  ]}
-                />
-              </Form.Item>
-              <Form.Item
-                label="文章内容"
-                name="content"
-                rules={[{ required: true, message: '请输入文章内容!', trigger: ['blur'] }]}
-              >
-                <UeEditor id="contentEditor" ref={'editorRef'} v-model={[defaultForm.content, 'value']} />
-              </Form.Item>
-              <Form.Item
-                label="文章封面"
-                name="cover_img"
-                rules={[{ required: true, message: '请上传文章封面!', trigger: ['blur'] }]}
-              >
-                <Upload
-                  name="avatar"
-                  accept=".jpg,.png"
-                  list-type="picture-card"
-                  showUploadList={false}
-                  beforeUpload={beforeUploadCover}
-                  onRemove={onRemove}
-                  customRequest={(file) => onChange(file)}
-                  maxCount={1}
+                <Form.Item
+                  label="文章标题"
+                  name="title"
+                  rules={[{ required: true, message: '请输入文章标题!', trigger: ['blur'] }]}
                 >
-                  {fileList.length ?
-                    <img src={avatarImg as string} alt="" width={100} height={100} style={{ objectFit: 'cover' }} /> :
-                    <div class="ant-upload-text">
-                      <PlusOutlined />
-                      <p>上传</p>
-                    </div>
-                  }
-                </Upload>
-              </Form.Item>
-            </Form>
+                  <Input v-model={[defaultForm.title, 'value']} placeholder="请输入文章标题" />
+                </Form.Item>
+                <Form.Item
+                  label="文章类别"
+                  name="cate_id"
+                  rules={[{ required: true, message: '请选择文章类别!', trigger: ['blur'] }]}
+                >
+                  <Select
+                    placeholder="请选择分类类别"
+                    style={{ width: '100%' }}
+                    v-model={[defaultForm.cate_id, 'value']}
+                    options={props.curItem.cateTypes && props.curItem.cateTypes.map(item => {
+                      return {
+                        value: item.id,
+                        label: item.name
+                      }
+                    })}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="文章状态"
+                  name="status"
+                  rules={[{ required: true, message: '请选择文章状态!', trigger: ['blur'] }]}
+                >
+                  <Select
+                    placeholder="请选择文章状态"
+                    style={{ width: '100%' }}
+                    v-model={[defaultForm.status, 'value']}
+                    options={[
+                      { value: '1', label: '已发布' },
+                      { value: '2', label: '草稿' },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="文章内容"
+                  name="content"
+                  rules={[{ required: true, message: '请输入文章内容!', trigger: ['blur'] }]}
+                >
+                  <UeEditor id="contentEditor" ref={'editorRef'} v-model={[defaultForm.content, 'value']} maxHeight={220} />
+                </Form.Item>
+                <Form.Item
+                  label="文章封面"
+                  name="cover_img"
+                  rules={[{ required: true, message: '请上传文章封面!', trigger: ['blur'] }]}
+                >
+                  <Upload
+                    name="avatar"
+                    accept=".jpg,.png"
+                    list-type="picture-card"
+                    showUploadList={false}
+                    beforeUpload={beforeUploadCover}
+                    onRemove={onRemove}
+                    customRequest={(file) => onChange(file)}
+                    maxCount={1}
+                  >
+                    {fileList.length ?
+                      <img src={avatarImg as string} alt="" width={100} height={100} style={{ objectFit: 'cover' }} /> :
+                      <div class="ant-upload-text">
+                        <PlusOutlined />
+                        <p>上传</p>
+                      </div>
+                    }
+
+                  </Upload>
+                </Form.Item>
+              </Form>
+            </div>
           </Modal>
         </div>
       </>

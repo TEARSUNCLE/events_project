@@ -8,6 +8,7 @@ import CreateCates from "./components/createCates";
 export default defineComponent({
   setup() {
     const list = ref<any[]>([])
+    const isLoading = ref<boolean>(false)
 
     const otherData = reactive({
       create: false,
@@ -17,14 +18,22 @@ export default defineComponent({
 
     const columns: ColumnsType = [
       {
+        title: 'ID',
+        dataIndex: 'id',
+        width: '10%',
+        align: 'center'
+      },
+      {
         title: '分类名称',
         dataIndex: 'name',
         width: '35%',
+        align: 'center'
       },
       {
         title: '分类别名',
         dataIndex: 'alias',
-        width: '35%'
+        width: '35%',
+        align: 'center'
       },
       {
         title: '操作',
@@ -92,11 +101,12 @@ export default defineComponent({
       otherData,
       handleModal,
       setModalFn,
+      isLoading
     }
   },
 
   render() {
-    const { columns, list, otherData, handleModal, setModalFn } = this
+    const { columns, list, otherData, handleModal, setModalFn, isLoading } = this
     return (
       <>
         <div class='pl5 pr5'>
@@ -119,6 +129,7 @@ export default defineComponent({
               pagination={false}
               scroll={{ x: '100%' }}
               rowKey={'id'}
+              loading={isLoading}
               row-class-name={(_record: any, index: number) => (index % 2 !== 1 ? 'table-striped' : null)}
             />
           </div>

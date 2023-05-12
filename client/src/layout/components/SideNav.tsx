@@ -21,29 +21,7 @@ export default defineComponent({
         key: 'article',
         icon: <FileTextOutlined />,
         label: '文章列表',
-      },
-      {
-        key: 'personal',
-        icon: <UserOutlined />,
-        label: '个人中心',
-        children: [
-          {
-            key: 'info',
-            icon: <AppstoreOutlined />,
-            label: '基本资料',
-          },
-          {
-            key: 'avatar',
-            icon: <AppstoreOutlined />,
-            label: '更换头像',
-          },
-          {
-            key: 'resetPwd',
-            icon: <AppstoreOutlined />,
-            label: '重置密码',
-          },
-        ]
-      },
+      }
     ])
 
     const router = useRouter()

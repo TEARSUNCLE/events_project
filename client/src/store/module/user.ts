@@ -1,3 +1,4 @@
+import { userInfoApi } from '@/api/user'
 import router from '@/router'
 import { userInfoType } from '@/types/common'
 import { clearToken, getToken } from '@/utils/storage'
@@ -31,6 +32,14 @@ export const useUserStore = defineStore('user', {
       router.push('/login')
       localStorage.removeItem('userInfo')
       clearToken()
+    },
+
+    // 获取用户信息
+    async getUserInfo() {
+      const { data } = await userInfoApi()
+      if (data.code === 0) {
+        this.setUserInfo(data.data)
+      }
     }
   }
 })

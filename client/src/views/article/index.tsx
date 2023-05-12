@@ -13,6 +13,7 @@ export default defineComponent({
     const list = ref<any[]>([])
     const articleCates = ref<any[]>([])
     const total = ref<number>(0)
+    const isLoading = ref<boolean>(false)
 
     const otherData = reactive({
       create: false,
@@ -32,6 +33,12 @@ export default defineComponent({
     })
 
     const columns: ColumnsType = [
+      {
+        title: 'ID',
+        dataIndex: 'id',
+        width: '10%',
+        align: 'center'
+      },
       {
         title: '文章标题',
         dataIndex: 'title',
@@ -87,6 +94,7 @@ export default defineComponent({
     })
 
     const getListHand = async () => {
+      isLoading.value = true
       for (const key in searchData.data) {
         if ([null, undefined, ''].includes(searchData.data[key])) delete searchData.data[key]
       }
@@ -100,6 +108,7 @@ export default defineComponent({
       }
       const { data } = await articleListApi(params)
       if (data.code === 0) {
+        isLoading.value = false
         list.value = data.data.entries
         total.value = data.data.total
       }
@@ -186,6 +195,7 @@ export default defineComponent({
       handleReset,
       pageChange,
       articleCates,
+      isLoading,
     }
   },
 
@@ -202,7 +212,8 @@ export default defineComponent({
       getListHand,
       handleReset,
       pageChange,
-      articleCates
+      articleCates,
+      isLoading
     } = this
     return (
       <>
@@ -260,7 +271,7 @@ export default defineComponent({
             </Button>
           </div>
 
-          <div>
+          <div class='list'>
             <Table
               class='mt5'
               columns={columns}
@@ -268,6 +279,7 @@ export default defineComponent({
               pagination={false}
               scroll={{ x: '100%' }}
               rowKey={'id'}
+              loading={isLoading}
               row-class-name={(_record: any, index: number) => (index % 2 !== 1 ? 'table-striped' : null)}
             />
           </div>
@@ -277,7 +289,7 @@ export default defineComponent({
               current={searchData.data.page}
               defaultPageSize={searchData.data.pageSize}
               total={total}
-              pageSizeOptions={['15', '10', '20', '50', '100']}
+              pageSizeOptions={['5', '10', '20', '50', '100']}
               showSizeChanger
               showQuickJumper
               onChange={(page: number, pageSize: number) => pageChange(page, +pageSize)}

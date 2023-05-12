@@ -1,4 +1,3 @@
-import { userInfoApi } from "@/api/user"
 import useStore from "@/store"
 import { defineComponent, onMounted, reactive, ref } from "vue"
 import styles from './css/index.module.less'
@@ -296,20 +295,13 @@ export default defineComponent({
       }
     ])
 
-    const userInfo = async () => {
-      const { data } = await userInfoApi()
-      if (data.code === 0) {
-        user.setUserInfo(data.data)
-      }
-    }
-
     onMounted(() => {
-      userInfo()
+      user.getUserInfo()
     })
 
     return {
       list,
-      chartOptions
+      chartOptions,
     }
   },
 

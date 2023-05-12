@@ -23,7 +23,7 @@ export default defineComponent({
       type: Number,
       default: 65535
     },
-    editorHeight: {
+    maxHeight: {
       type: Number,
       default: 300
     },
@@ -89,7 +89,7 @@ export default defineComponent({
         // 编辑器不自动被内容撑高
         autoHeightEnabled: false,
         // 初始容器高度
-        initialFrameHeight: props.editorHeight,
+        initialFrameHeight: props.maxHeight,
         // 初始容器宽度
         initialFrameWidth: '100%',
         // 上传文件接口
