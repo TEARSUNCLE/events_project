@@ -6,8 +6,8 @@ const password = Joi.string().pattern(/^[\S]{6,12}$/).required()
 
 // 更新用户信息
 const id = Joi.number().integer().min(1).required()
-const nickname = Joi.string().required()
-const email = Joi.string().email().required()
+const nickname = Joi.string().min(1).max(6)
+const email = Joi.string().email()
 
 // 修改头像
 const avatar = Joi.string().dataUri().required()

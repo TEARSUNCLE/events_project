@@ -18,6 +18,7 @@ exports.userinfo = (req, res) => {
 
 // 更新用户信息
 exports.updateinfo = (req, res) => {
+  if (!(req.body.nickname || req.body.email)) return res.errHandler('The user nickname and email cannot be both empty at the same time.')
   const updateSql = 'update ev_users set ? where id = ?'
   db.query(updateSql, [req.body, req.body.id], (err, results) => {
     if (err) return res.errHandler(err)
