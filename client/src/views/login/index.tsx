@@ -6,6 +6,7 @@ import { loginApi, registerApi } from "@/api/user"
 import styles from './css/index.module.less'
 import { setToken } from "@/utils/storage"
 import { useRouter } from "vue-router"
+import useStore from "@/store"
 
 export default defineComponent({
 
@@ -14,35 +15,40 @@ export default defineComponent({
     // 区分登录还是注册，默认登录
     const isLogin = ref<boolean>(true)
     const router = useRouter()
+    const { user } = useStore()
 
     const formData = reactive({
       username: '',
       password: ''
     })
 
-    const handleLogin = () => {
-      ruleForm.value.validateFields().then(async values => {
-        if (values) {
-          if (isLogin.value) {
-            // 登录
-            const { data } = await loginApi(formData)
-            if (data.code === 0) {
-              // 登录成功
-              setToken(data.token)
-              router.push('/dashboard')
-            }
-          } else {
-            const { data } = await registerApi(formData)
-            if (data.code === 0) {
-              // 登录成功
-              message.success('注册成功，可以登录啦!')
-              ruleForm.value.resetFields()
-              isLogin.value = true
-            }
+    const handleLogin = async () => {
+      const values = await ruleForm.value.validateFields().then((values: any) => values)
+      if (values) {
+        if (isLogin.value) {
+          // 登录
+          const { data } = await loginApi(formData)
+          if (data.code === 0) {
+            // 登录成功
+            setToken(data.token)
+            user.setLoginTime(new Date().getTime().toString())
+            router.push('/dashboard')
+          }
+        } else {
+          const { data } = await registerApi(formData)
+          if (data.code === 0) {
+            // 登录成功
+            message.success('注册成功，可以登录啦!')
+            ruleForm.value.resetFields()
+            isLogin.value = true
           }
         }
-      })
+      }
     }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleLogin()
+    })
 
     const inputFocus = (num: string) => {
       const line = Array.from(document.querySelectorAll('.bottomLine'))

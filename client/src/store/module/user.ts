@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
   state: () => {
     return {
       token: getToken() || '',
+      loginTime: '',
       userInfo: {} as userInfoType
     }
   },
@@ -16,7 +17,7 @@ export const useUserStore = defineStore('user', {
   persist: {
     enabled: true, // 开启存储
     strategies: [
-      { storage: localStorage, paths: ['userInfo'] }
+      { storage: localStorage, paths: ['userInfo', 'loginTime'] },
     ]
   },
 
@@ -27,8 +28,8 @@ export const useUserStore = defineStore('user', {
     },
 
     // 退出
-    logout() {
-      message.success('已退出')
+    logout(msg = '已退出', type = 'success') {
+      message[`${type}`](msg)
       router.push('/login')
       localStorage.removeItem('userInfo')
       clearToken()
@@ -40,6 +41,10 @@ export const useUserStore = defineStore('user', {
       if (data.code === 0) {
         this.setUserInfo(data.data)
       }
+    },
+
+    setLoginTime(time: string) {
+      this.loginTime = time
     }
   }
 })
